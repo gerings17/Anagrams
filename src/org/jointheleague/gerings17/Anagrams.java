@@ -2,8 +2,10 @@ package org.jointheleague.gerings17;
 
 import java.util.Arrays;
 
+/**
+ * public class Anagrams {
+ */
 public class Anagrams {
-	
 
 	static boolean isAnagram(String a, String b){
 		char[] aChars, bChars;
