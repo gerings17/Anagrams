@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
@@ -21,9 +24,9 @@ public class Anagrams {
 		new Anagrams().run();
 	}
 	private void run() throws IOException{
-		words =  loadAnagrams();
+		words =  loadAnagramsFromWeb();
 		String word = JOptionPane.showInputDialog("Enter in a word.");
-		findAnagrams(word);
+		findAnagrams2(word);
 	}
 	public void findAnagrams(String word) throws IOException{
 		for(int i = 0; i<words.size(); i++){
@@ -45,6 +48,12 @@ public class Anagrams {
 			sb.append(w);
 		}
 		JOptionPane.showMessageDialog(null,sb.toString());
+	}
+	public void findAnagrams2(String word){
+		String listOfAnagrams = words.stream()
+									 .filter(w->isAnagram(word, w))
+									 .collect(Collectors.joining(","));
+		JOptionPane.showMessageDialog(null, listOfAnagrams);
 	}
 
 	static boolean isAnagram(String a, String b){
@@ -81,6 +90,15 @@ public class Anagrams {
 		}
 		return listOfWords;
 	
+	}
+	public List<String> loadAnagramsFromWeb() throws IOException{
+		List<String> listOfWords = new ArrayList<>();
+		URL url = new URL("https://raw.githubusercontent.com/eneko/data-repository/master/data/words.txt");
+		URLConnection connection = url.openConnection();
+		try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
+			listOfWords = reader.lines().collect(Collectors.toList());
+		}
+		return listOfWords;
 	}
 }
 
